@@ -6,6 +6,8 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../models/http_exception.dart';
+
 class AuthRepository1 extends GetxController {
   String? _token;
   // DateTime? _expiryDate;
@@ -27,7 +29,9 @@ class AuthRepository1 extends GetxController {
         ),
       );
       final responseData = json.decode(response.body);
-
+      if (responseData['error'] != null) {
+        throw HttpException(responseData['error']['message']);
+      }
       _token = responseData['idToken'];
       _userId = responseData['localId'];
       // _expiryDate = DateTime.now()

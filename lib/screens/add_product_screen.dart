@@ -1,10 +1,7 @@
 import 'dart:io';
 
 import 'package:firestore/models/product_model.dart';
-import 'package:firestore/models/user_model.dart';
 import 'package:firestore/repository/user_repository.dart';
-import 'package:firestore/screens/all_user_screen.dart';
-import 'package:firestore/screens/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -39,69 +36,55 @@ class _AddProductScreenState extends State<AddProductScreen> {
   }
 
   File? _storedImage;
+  String? image_url;
 
   Future<String> uploadFile(File file) async {
+    print(file);
     String fileName = file.path.split('/').last;
     Reference ref = FirebaseStorage.instance.ref().child(fileName);
-    UploadTask uploadTask = ref.putFile(file);
-    TaskSnapshot snapshot = await uploadTask.whenComplete(() => null);
-    String url = await snapshot.ref.getDownloadURL();
-    return url;
+    try {
+      await ref.putFile(File(file.path));
+      var url = await ref.getDownloadURL();
+      print(url);
+      return url;
+    } on Exception catch (e) {
+      Get.dialog(Text(e.toString()));
+    }
+
+    return '';
   }
 
   Future<void> _takePicture() async {
-    /// Provides an easy way to pick an image/video from the image library,
-    /// or to take a picture/video with the camera.
     final picker = ImagePicker();
-
-    /// Returns a [PickedFile] with the image that was picked.
-    /// The `source` argument controls where the image comes from. This can
-    /// be either [ImageSource.camera] or [ImageSource.gallery].
     final imageFile = await picker.pickImage(
       source: ImageSource.camera,
       maxWidth: 600,
     );
-
     if (imageFile == null) {
       return;
     }
-
     setState(() {
-      //Get the path of the picked file, setState because we need to
-      //show the image as soon as it is taken
       _storedImage = File(imageFile.path);
     });
 
     var url = await uploadFile(_storedImage!);
-    print(url);
-
-    // *To find what location we have to store our image, this storage
-    // *is specifically reserved for app data
-    // final appDirectory = await syspath.getApplicationDocumentsDirectory();
-
-    // //*It stores the image name given by the app
-    // final fileName = path.basename(imageFile.path);
-    // final savedImage =
-    //     await _storedImage!.copy('${appDirectory.path}/$fileName');
-    // widget.onSelectImage(savedImage);
+    image_url = url;
   }
 
   @override
   Widget build(BuildContext context) {
-    final deviceSize = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(),
       body: Container(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Form(
           child: SingleChildScrollView(
             child: Column(
               children: <Widget>[
                 TextFormField(
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Name',
                   ),
-                  // keyboardType: TextInputType.emailAddress,
                   controller: nameController,
                   validator: (value) {
                     if (value == null) {
@@ -109,12 +92,10 @@ class _AddProductScreenState extends State<AddProductScreen> {
                     }
                     return null;
                   },
-                  onSaved: (value) {
-                    // _authData['email'] = value!;
-                  },
+                  onSaved: (value) {},
                 ),
                 TextFormField(
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Price',
                   ),
                   keyboardType: TextInputType.emailAddress,
@@ -130,10 +111,9 @@ class _AddProductScreenState extends State<AddProductScreen> {
                   },
                 ),
                 TextFormField(
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Description',
                   ),
-                  // keyboardType: TextInputType.emailAddress,
                   controller: descriptionController,
                   maxLines: 4,
                   validator: (value) {
@@ -142,11 +122,9 @@ class _AddProductScreenState extends State<AddProductScreen> {
                     }
                     return null;
                   },
-                  onSaved: (value) {
-                    // _authData['email'] = value!;
-                  },
+                  onSaved: (value) {},
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 20,
                 ),
                 GestureDetector(
@@ -157,7 +135,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                     decoration:
                         BoxDecoration(border: Border.all(color: Colors.grey)),
                     child: _storedImage == null
-                        ? Center(
+                        ? const Center(
                             child: Icon(Icons.camera),
                           )
                         : Container(
@@ -166,16 +144,17 @@ class _AddProductScreenState extends State<AddProductScreen> {
                           )),
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 20,
                 ),
                 ElevatedButton(
-                  child: Text('Create Product'),
+                  child: const Text('Create Product'),
                   onPressed: () async {
                     try {
                       await productRepository.addProduct(ProductModel(
                           prodName: nameController.text,
                           prodDescription: descriptionController.text,
+                          url: image_url ?? "",
                           price: priceController.text));
                       Get.back();
                     } catch (e) {
@@ -188,8 +167,6 @@ class _AddProductScreenState extends State<AddProductScreen> {
                           borderRadius: BorderRadius.circular(30),
                         ),
                       ),
-                      // foregroundColor: MaterialStateProperty.all(
-                      //     Theme.of(context).primaryColor),
                       foregroundColor: MaterialStateProperty.all(Colors.white)),
                 ),
               ],

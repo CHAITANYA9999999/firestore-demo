@@ -2,12 +2,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ProductModel {
   final String? id;
+  final String url;
   final String prodName;
   final String prodDescription;
   final String price;
 
   ProductModel({
     this.id,
+    required this.url,
     required this.prodName,
     required this.prodDescription,
     required this.price,
@@ -15,9 +17,10 @@ class ProductModel {
 
   toJson() {
     return {
-      'prodName': this.prodName,
-      'prodDescription': this.prodDescription,
-      'price': this.price,
+      'prodName': prodName,
+      'prodDescription': prodDescription,
+      'price': price,
+      'url': url
     };
   }
 
@@ -26,6 +29,7 @@ class ProductModel {
     final data = documentSnapshot.data()!;
     return ProductModel(
       id: documentSnapshot.id,
+      url: data['url'],
       price: data["price"],
       prodName: data["prodName"],
       prodDescription: data["prodDescription"],

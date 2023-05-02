@@ -2,11 +2,7 @@ import 'package:firestore/repository/auth_repository.dart';
 import 'package:firestore/screens/products_screen.dart';
 import 'package:firestore/screens/signup_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:get/get.dart';
-
-import '../models/user_model.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -45,7 +41,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   decoration: InputDecoration(
                     labelText: 'Email Number',
                   ),
-                  // keyboardType: TextInputType.emailAddress,
                   controller: emailController,
                   validator: (value) {
                     if (value == null) {
@@ -53,9 +48,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     }
                     return null;
                   },
-                  onSaved: (value) {
-                    // _authData['email'] = value!;
-                  },
+                  onSaved: (value) {},
                 ),
                 TextFormField(
                   decoration: InputDecoration(labelText: 'Password'),
@@ -66,36 +59,28 @@ class _LoginScreenState extends State<LoginScreen> {
                       return 'Password is too short!';
                     }
                   },
-                  onSaved: (value) {
-                    // _authData['password'] = value!;
-                  },
+                  onSaved: (value) {},
                 ),
-                // if (_authMode == AuthMode.Signup)
-                // TextFormField(
-                //   enabled: _authMode == AuthMode.Signup,
-                //   decoration: InputDecoration(labelText: 'Confirm Password'),
-                //   obscureText: true,
-                //   validator: _authMode == AuthMode.Signup
-                //       ? (value) {
-                //           if (value != _passwordController.text) {
-                //             return 'Passwords do not match!';
-                //           }
-                //         }
-                //       : null,
-                // ),
                 SizedBox(
                   height: 20,
                 ),
-                // if (_isLoading)
-                //   CircularProgressIndicator()
-                // else
                 ElevatedButton(
                   child: Text('LOGIN'),
                   onPressed: () async {
-                    await auth.login(
-                        emailController.text, passwordController.text);
-                    Get.offAll(ProductsScreen());
-                    Get.snackbar("Success", "Login Done Successfully");
+                    try {
+                      await auth.login(
+                          emailController.text, passwordController.text);
+                      Get.offAll(ProductsScreen());
+                      Get.snackbar("Success", "Login Done Successfully");
+                    } on Exception catch (e) {
+                      // TODO
+                      Get.defaultDialog(
+                        title: 'Error!',
+                        content: Text(e.toString()),
+                        textConfirm: 'Okay',
+                        onConfirm: () => Get.back(),
+                      );
+                    }
                   },
                   style: ButtonStyle(
                       shape: MaterialStateProperty.all(
@@ -103,8 +88,6 @@ class _LoginScreenState extends State<LoginScreen> {
                           borderRadius: BorderRadius.circular(30),
                         ),
                       ),
-                      // foregroundColor: MaterialStateProperty.all(
-                      //     Theme.of(context).primaryColor),
                       foregroundColor: MaterialStateProperty.all(Colors.white)),
                 ),
                 ElevatedButton(
@@ -118,8 +101,6 @@ class _LoginScreenState extends State<LoginScreen> {
                           borderRadius: BorderRadius.circular(30),
                         ),
                       ),
-                      // foregroundColor: MaterialStateProperty.all(
-                      //     Theme.of(context).primaryColor),
                       foregroundColor: MaterialStateProperty.all(Colors.white)),
                 ),
               ],

@@ -1,8 +1,5 @@
 import 'package:firestore/models/product_model.dart';
-import 'package:firestore/models/user_model.dart';
 import 'package:firestore/repository/user_repository.dart';
-import 'package:firestore/screens/all_user_screen.dart';
-import 'package:firestore/screens/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -39,8 +36,6 @@ class _EditProductScreenState extends State<EditProductScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print(data.id);
-    final deviceSize = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(),
       body: Container(
@@ -53,7 +48,6 @@ class _EditProductScreenState extends State<EditProductScreen> {
                   decoration: InputDecoration(
                     labelText: 'Name',
                   ),
-                  // keyboardType: TextInputType.emailAddress,
                   controller: nameController,
                   validator: (value) {
                     if (value == null) {
@@ -61,9 +55,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                     }
                     return null;
                   },
-                  onSaved: (value) {
-                    // _authData['email'] = value!;
-                  },
+                  onSaved: (value) {},
                 ),
                 TextFormField(
                   decoration: InputDecoration(
@@ -77,15 +69,12 @@ class _EditProductScreenState extends State<EditProductScreen> {
                     }
                     return null;
                   },
-                  onSaved: (value) {
-                    // _authData['email'] = value!;
-                  },
+                  onSaved: (value) {},
                 ),
                 TextFormField(
                   decoration: InputDecoration(
                     labelText: 'Description',
                   ),
-                  // keyboardType: TextInputType.emailAddress,
                   controller: descriptionController,
                   maxLines: 4,
                   validator: (value) {
@@ -94,9 +83,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                     }
                     return null;
                   },
-                  onSaved: (value) {
-                    // _authData['email'] = value!;
-                  },
+                  onSaved: (value) {},
                 ),
                 SizedBox(
                   height: 20,
@@ -108,6 +95,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                       await productRepository.updateProduct(
                           data.id!,
                           ProductModel(
+                              url: data.url,
                               prodName: nameController.text,
                               prodDescription: descriptionController.text,
                               price: priceController.text));
@@ -122,8 +110,6 @@ class _EditProductScreenState extends State<EditProductScreen> {
                           borderRadius: BorderRadius.circular(30),
                         ),
                       ),
-                      // foregroundColor: MaterialStateProperty.all(
-                      //     Theme.of(context).primaryColor),
                       foregroundColor: MaterialStateProperty.all(Colors.white)),
                 ),
               ],

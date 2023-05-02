@@ -78,6 +78,7 @@ class ProductRepository extends GetxController {
         prodName: product.prodName,
         prodDescription: product.prodDescription,
         price: product.price,
+        url: product.url,
         id: response.id));
   }
 
@@ -94,6 +95,7 @@ class ProductRepository extends GetxController {
             prodName: product.prodName,
             prodDescription: product.prodDescription,
             price: product.price,
+            url: product.url,
             id: documentId);
         break;
       }
