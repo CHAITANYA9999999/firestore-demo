@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ProductModel {
   final String? id;
-  final String url;
+  final String? url;
   final String prodName;
   final String prodDescription;
   final String price;
@@ -29,7 +29,7 @@ class ProductModel {
     final data = documentSnapshot.data()!;
     return ProductModel(
       id: documentSnapshot.id,
-      url: data['url'],
+      url: data.containsKey('url') ? data['url'] : null,
       price: data["price"],
       prodName: data["prodName"],
       prodDescription: data["prodDescription"],

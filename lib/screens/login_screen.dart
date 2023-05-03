@@ -28,7 +28,19 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(
+            Icons.swap_horizontal_circle_sharp,
+          ),
+          onPressed: () async {
+            Get.changeTheme(
+              Get.isDarkMode ? ThemeData.light() : ThemeData.dark(),
+            );
+            await Get.forceAppUpdate();
+          },
+        ),
+      ),
       body: Container(
         height: deviceSize.height,
         width: deviceSize.width,

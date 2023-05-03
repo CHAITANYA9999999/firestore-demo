@@ -37,7 +37,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(
+            Icons.swap_horizontal_circle_sharp,
+          ),
+          onPressed: () async {
+            Get.changeTheme(
+              Get.isDarkMode ? ThemeData.light() : ThemeData.dark(),
+            );
+            setState(() {});
+          },
+        ),
+      ),
       body: Container(
         padding: EdgeInsets.all(16.0),
         child: Form(

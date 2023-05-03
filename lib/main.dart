@@ -20,9 +20,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+      theme: ThemeData(primarySwatch: Colors.blue),
+      darkTheme: ThemeData.dark().copyWith(primaryColor: Colors.red),
       home: LoginScreen(),
     );
   }

@@ -45,7 +45,6 @@ class _AddProductScreenState extends State<AddProductScreen> {
     try {
       await ref.putFile(File(file.path));
       var url = await ref.getDownloadURL();
-      print(url);
       return url;
     } on Exception catch (e) {
       Get.dialog(Text(e.toString()));
